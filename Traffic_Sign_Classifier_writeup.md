@@ -28,6 +28,7 @@ The goals / steps of this project are the following:
 ###Writeup / README
 
 Here is a link to my [project code (Jupyter Notebook)](https://github.com/ArjaanBuijk/CarND_Traffic_Sign_Classifier_Project/blob/master/Traffic_Sign_Classifier.ipynb)
+
 Here is a link to my [project code (HTML exported after run)](https://github.com/ArjaanBuijk/CarND_Traffic_Sign_Classifier_Project/blob/master/Traffic_Sign_Classifier.html)
   
  NOTE: The github website will not display the HTML file, because it is too big. You must download it to your disk, and then open it in your browser to view it.
@@ -47,8 +48,8 @@ The code for this step is contained in the second code cell of the Jupyter noteb
 
 The following hyper parameters are available for optimization:
 
-| Hyper Parameter| Description | Optimized Value |
-| - | - | - |
+| Hyper Parameter | Description | Optimized Value |
+| --------------- | ----------- | --------------- |
 | EPOCHS | how many forward/backward loops | 200 |
 | BATCH_SIZE| training images per batch | 16 |
 | rate| learning rate | 0.0001 |
@@ -83,7 +84,7 @@ The code for this step is contained in the fourth code cell of the Jupyter noteb
 The function check_and_summarize_data provides this summary:
 
 | Item | Value |
-| - | - |
+| ---- | ----- |
 |Number of training examples | 34799 | 
 |Number of validation examples | 4410 |
 |Number of testing examples | 12630 |
@@ -112,7 +113,7 @@ This allows for clear descriptions in the reports.
 Then, in this code cell are two functions that were used during this initial investigation, and then re-used below during actual pre-processing of the data.
 
 | Function | Description |
-| - | - |
+| -------- | ----------- |
 |grayscale | converts an RGB image into grayscale | 
 |apply_clahe | Applies a Contrast Limited Adaptive Histogram Equalization (CLAHE)|
 
@@ -167,8 +168,8 @@ I made the following modifications to the LeNet-5 implementation:
 
 My final model consisted of the following layers:
 
-| Layer |name        		|     Description	        					| 
-|-------|--------------|---------------------------------------------| 
+| Layer | Name | Description | 
+| ----- | ---- | ----------- | 
 | Input   |      		| 32x32x1 Grayscale image   							| 
 | Convolution 5x5|conv1 | 1x1 stride, VALID padding, outputs 28x28x6 	|
 | RELU		|conv1_r|												|
@@ -186,8 +187,8 @@ My final model consisted of the following layers:
 
 <u>Description of utility functions:</u>
 
-|function|Description|
-|-|-|
+| function | Description |
+| -------- | ----------- |
 |evaluate|Evaluate the accuracy of predictions|
 |prediction_counts|Count number of true-positive, false-negative, false-positive predictions for each class|
 |summarize_predictions|Summarizes predictions in tabular and visual formats|
@@ -205,8 +206,8 @@ I simply ran many variations of the hyper-parameters described above, in a syste
 
 <u>Prediction summary:</u>
  
-|label                                                          |count   | true-pos   |false-neg |false-pos  |
-|-|-|-|-|-|
+| label | count | true-pos | false-neg | false-pos |
+| ----- | ----- | -------- | --------- | --------- |
 |class =0: Speed limit (20km/h)                                 |   30   | 23(76 %)   |  7(23 %) |        1  |
 |class =1: Speed limit (30km/h)                                 |  240   |233(97 %)   |  7(2  %) |       12  |
 |class =2: Speed limit (50km/h)                                 |  240   |235(97 %)   |  5(2  %) |        5  |
