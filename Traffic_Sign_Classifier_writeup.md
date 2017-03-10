@@ -106,11 +106,10 @@ Key take-aways are:
 
 The code for this step is contained in the fifth code cell of the Jupyter notebook.  
 
-First, the description belonging to each class is read into a Panda DataFrame, from the file signnames.csv.
+The description belonging to each class is read into a Panda DataFrame, from the file signnames.csv.
+Instead of just referring to class labels, the description is always used in investigative reports.
 
-This allows for clear descriptions in the reports.
-
-Then, in this code cell are two functions that were used during this initial investigation, and then re-used below during actual pre-processing of the data.
+In this code cell are also two functions that were used during this initial investigation.
 
 | Function | Description |
 | -------- | ----------- |
@@ -152,7 +151,7 @@ These issues were addressed by the following 3 pre-processing techniques:
 
 The effect of Grayscale and CLAHE was already described and shown in the previous section. 
 
-At the end of the pre-processing steps, the data is written to a pickle file. Especially the augmentation and CLAHE are time consuming, and it is important to have to redo this all the time during hyper-parameter optimization.
+At the end of the pre-processing steps, the data is written to a pickle file. Especially the augmentation and CLAHE are time consuming, and it is important to avoid these during hyper-parameter optimization.
 
 ####2. The model architecture and utility functions.
 
@@ -202,7 +201,7 @@ The training pipeline and training session is defined in the tenth and fifteenth
 
 To train the model, I used the AdamOptimizer.
 
-I simply ran many variations of the hyper-parameters described above, in a systematic manner. Varying one parameter at a time. Each time, I looked at the validation accuracy overall, but also at the prediction Summary, like this:
+I simply ran many variations of the hyper-parameters described above, in a systematic manner. Varying one parameter at a time. Each time, I looked at the validation accuracy overall, but also at this prediction summary:
 
 <u>Prediction summary:</u>
  
@@ -301,22 +300,10 @@ For all images, the model is very sure about the prediction, as can be seen from
 
 <u>Top 5 softmax probabilities</u>
 
-class =11: Right-of-way at the next intersection
-Predictions   :['        11', '        30', '        27', '        40', '        25']
-Probabilities :['   <b>100.00%'</b>, '     0.00%', '     0.00%', '     0.00%', '     0.00%']
-
-class =14: Stop
-Predictions   :['        14', '        15', '         3', '         8', '        35']
-Probabilities :['    <b>76.65%</b>', '    22.99%', '     0.27%', '     0.08%', '     0.01%']
-
-class =18: General caution
-Predictions   :['        18', '        27', '        26', '         0', '         4']
-Probabilities :['   <b>100.00%</b>', '     0.00%', '     0.00%', '     0.00%', '     0.00%']
-
-class =25: Road work
-Predictions   :['        25', '        37', '        18', '        20', '        34']
-Probabilities :['   <b>100.00%</b>', '     0.00%', '     0.00%', '     0.00%', '     0.00%']
-
-class =31: Wild animals crossing
-Predictions   :['        31', '        21', '        23', '        19', '        25']
-Probabilities :['   <b>100.00%</b>', '     0.00%', '     0.00%', '     0.00%', '     0.00%']
+| Image | Prediction1 | Prediction2 | Prediction3 | Prediction4 | Prediction5 | 
+| ------- | -------------- | ------------- | -------------- | -------------- | -------------- |
+|class =11: Right-of-way at the next intersection| 11(100%) |30(0%)|27(0%)|40(0%)|25(0%)|
+|class =14: Stop| 14(76.65%) |15(22.99%)|3(0.27%)|8(0.08%)|35(0.01%)|
+|class =18: General caution| 18(100%) |27(0%)|26(0%)|0(0%)|4(0%)|
+|class =25: Road work| 25(100%) |37(0%)|18(0%)|20(0%)|34(0%)|
+|class =31: Wild animals crossing| 31(100%) |21(0%)|23(0%)|19(0%)|25(0%)|
