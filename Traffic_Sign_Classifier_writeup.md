@@ -133,124 +133,189 @@ The 3rd function in this code cell creates a table that summarizes for each clas
 
 ###Design and Test a Model Architecture
 
-####1. Describe how, and identify where in your code, you preprocessed the image data. What tecniques were chosen and why did you choose these techniques? Consider including images showing the output of each preprocessing technique. Pre-processing refers to techniques such as converting to grayscale, normalization, etc.
+####1. The training data is pre-processed using augmentation, Grayscale conversion and Contrast Limited Adaptive Histogram Equalization (CLAHE)
 
-The code for this step is contained in the sixth, code cell of the IPython notebook.
+The code for this step is contained in the fifth to eight code cells of the Jupyter notebook.
 
-As a first step, I decided to convert the images to grayscale because ...
+During detailed investigation of the images, as described above, I found 3 issues with the training set:
 
-Here is an example of a traffic sign image before and after grayscaling.
+ 1. There was a large difference in number of images per class.
+ 2. The traffic signs do NOT require color to be taken into account for classification.
+ 3. Even after conversion to Grayscale, there were a lot of images with very poor contrast.
 
-![alt text][image2]
+These issues were addressed by the following 3 pre-processing techniques:
 
-As a last step, I normalized the image data because ...
+ 1. I augmented the training data set, and added images to each class by taking the existing images and applying a random rotation. After this step, each class ended up with the same number of images. The total number of images increased from 34799 to 86430.
+ 2. I converted all training, validation and test images to Grayscale.
+ 3. After that, I applied CLAHE, which is both an equalizer and a normalization.
 
-####2. Describe how, and identify where in your code, you set up training, validation and testing data. How much data was in each set? Explain what techniques were used to split the data into these sets. (OPTIONAL: As described in the "Stand Out Suggestions" part of the rubric, if you generated additional data for training, describe why you decided to generate additional data, how you generated the data, identify where in your code, and provide example images of the additional data)
+The effect of Grayscale and CLAHE was already described and shown in the previous section. 
 
-The code for splitting the data into training and validation sets is contained in the fifth code cell of the IPython notebook.  
+At the end of the pre-processing steps, the data is written to a pickle file. Especially the augmentation and CLAHE are time consuming, and it is important to have to redo this all the time during hyper-parameter optimization.
 
-To cross validate my model, I randomly split the training data into a training set and validation set. I did this by ...
+####2. The model architecture and utility functions.
 
-My final training set had X number of images. My validation set and test set had Y and Z number of images.
+The code for my final model is located in the ninth to thirteenth cells of the Jupyter notebook. 
 
-The sixth code cell of the IPython notebook contains the code for augmenting the data set. I decided to generate additional data because ... To add more data to the the data set, I used the following techniques because ... 
+<u>Description of LeNet-5 function:</u>
 
-Here is an example of an original image and an augmented image:
+I made the following modifications to the LeNet-5 implementation:
 
-![alt text][image3]
-
-The difference between the original data set and the augmented data set is the following ... 
-
-
-####3. Describe, and identify where in your code, what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.
-
-The code for my final model is located in the seventh cell of the ipython notebook. 
+ 1. Added a dropout layer before the last readout layer.
+ 2. Renamed the layers and did not reuse the same name twice.
+ 3. To allow visualization of layer activation, the layer identifier must be known outside of the function. This is why I am returning not just the logits, but also the identifiers of the hidden layers from the function, I guess that means these layers are no longer hidden ;-) 
 
 My final model consisted of the following layers:
 
-| Layer         		|     Description	        					| 
-|:---------------------:|:---------------------------------------------:| 
-| Input         		| 32x32x3 RGB image   							| 
-| Convolution 3x3     	| 1x1 stride, same padding, outputs 32x32x64 	|
-| RELU					|												|
-| Max pooling	      	| 2x2 stride,  outputs 16x16x64 				|
-| Convolution 3x3	    | etc.      									|
-| Fully connected		| etc.        									|
-| Softmax				| etc.        									|
-|						|												|
-|						|												|
+| Layer |name        		|     Description	        					| 
+|-------|--------------|---------------------------------------------| 
+| Input   |      		| 32x32x1 Grayscale image   							| 
+| Convolution 5x5|conv1 | 1x1 stride, VALID padding, outputs 28x28x6 	|
+| RELU		|conv1_r|												|
+| Max pooling|conv1_p	| 2x2 stride,  VALID padding, outputs 14x14x6 |
+| Convolution 5x5|conv2	  | 1x1 stride, VALID padding, outputs 10x10x16  |
+| RELU	|conv2_r	|												|  
+| Max pooling|conv2_p		| 2x2 stride, VALID padding, outputs 5x5x16 |
+| Flatten|fc0		| outputs 400 |    						
+| Fully connected |fc1	| outputs 120	|
+| RELU	|fc1_r	|												|
+| Fully connected |fc2	| outputs 84|
+| RELU	|fc2_r	|
+| Dropout |fc2_drop	|  |
+| Output layer: Fully connected |logits | outputs 43|
+
+<u>Description of utility functions:</u>
+
+|function|Description|
+|-|-|
+|evaluate|Evaluate the accuracy of predictions|
+|prediction_counts|Count number of true-positive, false-negative, false-positive predictions for each class|
+|summarize_predictions|Summarizes predictions in tabular and visual formats|
+|summarize_top_probabilities|Summarizes top probabilities in tabular format|
  
+ 
+####4. Training approach.
 
+The code for loading the pre-processed data is contained in the fourteenth cell of the Jupyter notebook. 
+The training pipeline and training session is defined in the tenth and fifteenth cell of the Jupyter notebook.
 
-####4. Describe how, and identify where in your code, you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.
+To train the model, I used the AdamOptimizer.
 
-The code for training the model is located in the eigth cell of the ipython notebook. 
+I simply ran many variations of the hyper-parameters described above, in a systematic manner. Varying one parameter at a time. Each time, I looked at the validation accuracy overall, but also at the prediction Summary, like this:
 
-To train the model, I used an ....
+<u>Prediction summary:</u>
+ 
+|label                                                          |count   | true-pos   |false-neg |false-pos  |
+|-|-|-|-|-|
+|class =0: Speed limit (20km/h)                                 |   30   | 23(76 %)   |  7(23 %) |        1  |
+|class =1: Speed limit (30km/h)                                 |  240   |233(97 %)   |  7(2  %) |       12  |
+|class =2: Speed limit (50km/h)                                 |  240   |235(97 %)   |  5(2  %) |        5  |
+|class =3: Speed limit (60km/h)                                 |  150   |141(94 %)   |  9(6  %) |        4  |
+|class =4: Speed limit (70km/h)                                 |  210   |208(99 %)   |  2(0  %) |        6  |
+|class =5: Speed limit (80km/h)                                 |  210   |199(94 %)   | 11(5  %) |        9  |
+|class =6: End of speed limit (80km/h)                          |   60   | 59(98 %)   |  1(1  %) |        1  |
+|class =7: Speed limit (100km/h)                                |  150   |150(100%)   |  0(0  %) |        1  |
+|class =8: Speed limit (120km/h)                                |  150   |149(99 %)   |  1(0  %) |        4  |
+|class =9: No passing                                           |  150   |148(98 %)   |  2(1  %) |        0  |
+|class =10: No passing for vehicles over 3.5 metric tons        |  210   |210(100%)   |  0(0  %) |        0  |
+|class =11: Right-of-way at the next intersection               |  150   |150(100%)   |  0(0  %) |        7  |
+|class =12: Priority road                                       |  210   |210(100%)   |  0(0  %) |        3  |
+|class =13: Yield                                               |  240   |237(98 %)   |  3(1  %) |        2  |
+|class =14: Stop                                                |   90   | 83(92 %)   |  7(7  %) |        0  |
+|class =15: No vehicles                                         |   90   | 90(100%)   |  0(0  %) |        0  |
+|class =16: Vehicles over 3.5 metric tons prohibited            |   60   | 30(50 %)   | 30(50 %) |        0  |
+|class =17: No entry                                            |  120   |114(95 %)   |  6(5  %) |        0  |
+|class =18: General caution                                     |  120   |118(98 %)   |  2(1  %) |       13  |
+|class =19: Dangerous curve to the left                         |   30   | 30(100%)   |  0(0  %) |        5  |
+|class =20: Dangerous curve to the right                        |   60   | 35(58 %)   | 25(41 %) |        4  |
+|class =21: Double curve                                        |   60   | 32(53 %)   | 28(46 %) |        0  |
+|class =22: Bumpy road                                          |   60   | 59(98 %)   |  1(1  %) |        1  |
+|class =23: Slippery road                                       |   60   | 57(95 %)   |  3(5  %) |       14  |
+|class =24: Road narrows on the right                           |   30   | 23(76 %)   |  7(23 %) |        4  |
+|class =25: Road work                                           |  150   |142(94 %)   |  8(5  %) |        3  |
+|class =26: Traffic signals                                     |   60   | 54(90 %)   |  6(10 %) |        2  |
+|class =27: Pedestrians                                         |   30   | 24(80 %)   |  6(20 %) |        8  |
+|class =28: Children crossing                                   |   60   | 60(100%)   |  0(0  %) |        7  |
+|class =29: Bicycles crossing                                   |   30   | 30(100%)   |  0(0  %) |        2  |
+|class =30: Beware of ice/snow                                  |   60   | 58(96 %)   |  2(3  %) |        4  |
+|class =31: Wild animals crossing                               |   90   | 90(100%)   |  0(0  %) |       12  |
+|class =32: End of all speed and passing limits                 |   30   | 30(100%)   |  0(0  %) |       32  |
+|class =33: Turn right ahead                                    |   90   | 87(96 %)   |  3(3  %) |        3  |
+|class =34: Turn left ahead                                     |   60   | 59(98 %)   |  1(1  %) |        1  |
+|class =35: Ahead only                                          |  120   |120(100%)   |  0(0  %) |        1  |
+|class =36: Go straight or right                                |   60   | 60(100%)   |  0(0  %) |        4  |
+|class =37: Go straight or left                                 |   30   | 30(100%)   |  0(0  %) |        1  |
+|class =38: Keep right                                          |  210   |199(94 %)   | 11(5  %) |        1  |
+|class =39: Keep left                                           |   30   | 30(100%)   |  0(0  %) |       15  |
+|class =40: Roundabout mandatory                                |   60   | 58(96 %)   |  2(3  %) |        1  |
+|class =41: End of no passing                                   |   30   | 27(90 %)   |  3(10 %) |        1  |
+|class =42: End of no passing by vehicles over 3.5 metric tons  |    30  |  30(100%)  |   0(0  %)|         5 |
+|<u>TOTAL</u>                               | <u>4410</u>   |     <u>4211</u>   |      <u>199</u> |      <u>199</u>  |
 
-####5. Describe the approach taken for finding a solution. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
+When using a non-augmented data set I could actually achieve a higher overall accuracy, but there were many classes with a 30+ % of false negatives. With the augmented data set, the overall accuracy was lower, but there were not many classes with such a high rate of false negatives.
 
-The code for calculating the accuracy of the model is located in the ninth cell of the Ipython notebook.
+The only ones remaining were class 16, 20 and 21. 
+
+In addition to the tabular format, I also plotted 2 of the false negatives for each class, to get an idea why it missed the prediction. From the images plotted, it was clear that:
+
+ - The predictor is good at detecting a speed limit sign, but sometimes missed the speed limit value. For example, it predicted 70 km/h instead 20 km/h.
+ - Several 'danger'signs, warning for traffic signals, curve to right, curve to left, double curve, etc.. were mis-predicted.
+
 
 My final model results were:
-* training set accuracy of ?
-* validation set accuracy of ? 
-* test set accuracy of ?
+* training set accuracy of 1.0
+* validation set accuracy of 0.955 
+* test set accuracy of 0.932
 
-If an iterative approach was chosen:
-* What was the first architecture that was tried and why was it chosen?
-* What were some problems with the initial architecture?
-* How was the architecture adjusted and why was it adjusted? Typical adjustments could include choosing a different model architecture, adding or taking away layers (pooling, dropout, convolution, etc), using an activation function or changing the activation function. One common justification for adjusting an architecture would be due to over fitting or under fitting. A high accuracy on the training set but low accuracy on the validation set indicates over fitting; a low accuracy on both sets indicates under fitting.
-* Which parameters were tuned? How were they adjusted and why?
-* What are some of the important design choices and why were they chosen? For example, why might a convolution layer work well with this problem? How might a dropout layer help with creating a successful model?
-
-If a well known architecture was chosen:
-* What architecture was chosen?
-* Why did you believe it would be relevant to the traffic sign application?
-* How does the final model's accuracy on the training, validation and test set provide evidence that the model is working well?
  
 
 ###Test a Model on New Images
 
 ####1. Choose five German traffic signs found on the web and provide them in the report. For each image, discuss what quality or qualities might be difficult to classify.
 
-Here are five German traffic signs that I found on the web:
+Here are five German traffic signs that I found on the web, shown in RGB, GrayScale and CLAHE:
 
-![alt text][image4] ![alt text][image5] ![alt text][image6] 
-![alt text][image7] ![alt text][image8]
+![New Signs from the Web](https://github.com/ArjaanBuijk/CarND_Traffic_Sign_Classifier_Project/blob/master/signs_new.jpg)
 
-The first image might be difficult to classify because ...
+####2. Predictions of new images from the web.
 
-####2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. Identify where in your code predictions were made. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).
+The code for loading the images and pre-process them is in cell 18 of the Jupyter notebook.
+The code for predicting the labels with the trained predictor is in cell 19 of the Jupyter notebook.
 
-The code for making predictions on my final model is located in the tenth cell of the Ipython notebook.
+Becuase I store all 5 images and labels in the numpy arrays X_new and y_new, the coding is identical to what was used to predict the test set.
 
-Here are the results of the prediction:
+When I tested these new images on a predictor that was trained with non-augmented data, it often had the 3rd image wrong. Once I switched to the augmented data set, it always got 100 % of these tests correct.
 
-| Image			        |     Prediction	        					| 
-|:---------------------:|:---------------------------------------------:| 
-| Stop Sign      		| Stop sign   									| 
-| U-turn     			| U-turn 										|
-| Yield					| Yield											|
-| 100 km/h	      		| Bumpy Road					 				|
-| Slippery Road			| Slippery Road      							|
+I realize that I should not determine hyper-parameters based on the test set, and would have to find more images to make make sure my predictor is well trained. I will leave this for later at the moment.
 
+I did not study the effect of modifying the architecture of the network, except the addition of the dropout layer already described above. 
 
-The model was able to correctly guess 4 of the 5 traffic signs, which gives an accuracy of 80%. This compares favorably to the accuracy on the test set of ...
+The model was able to correctly guess 5 of the 5 traffic signs, which gives an accuracy of 100%. This compares favorably to the accuracy on the test set of 93.2%
 
-####3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction and identify where in your code softmax probabilities were outputted. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
+####3. Softmax probabilities for new images from web
 
-The code for making predictions on my final model is located in the 11th cell of the Ipython notebook.
+The code for determining the top 5 softmax probabilities for each new image from the web is located in the 21st cell of the Jupyter notebook.
 
-For the first image, the model is relatively sure that this is a stop sign (probability of 0.6), and the image does contain a stop sign. The top five soft max probabilities were
+For all images, the model is very sure about the prediction, as can be seen from this table:
 
-| Probability         	|     Prediction	        					| 
-|:---------------------:|:---------------------------------------------:| 
-| .60         			| Stop sign   									| 
-| .20     				| U-turn 										|
-| .05					| Yield											|
-| .04	      			| Bumpy Road					 				|
-| .01				    | Slippery Road      							|
+<u>Top 5 softmax probabilities</u>
 
+class =11: Right-of-way at the next intersection
+Predictions   :['        11', '        30', '        27', '        40', '        25']
+Probabilities :['   <b>100.00%'</b>, '     0.00%', '     0.00%', '     0.00%', '     0.00%']
 
-For the second image ... 
+class =14: Stop
+Predictions   :['        14', '        15', '         3', '         8', '        35']
+Probabilities :['    <b>76.65%</b>', '    22.99%', '     0.27%', '     0.08%', '     0.01%']
+
+class =18: General caution
+Predictions   :['        18', '        27', '        26', '         0', '         4']
+Probabilities :['   <b>100.00%</b>', '     0.00%', '     0.00%', '     0.00%', '     0.00%']
+
+class =25: Road work
+Predictions   :['        25', '        37', '        18', '        20', '        34']
+Probabilities :['   <b>100.00%</b>', '     0.00%', '     0.00%', '     0.00%', '     0.00%']
+
+class =31: Wild animals crossing
+Predictions   :['        31', '        21', '        23', '        19', '        25']
+Probabilities :['   <b>100.00%</b>', '     0.00%', '     0.00%', '     0.00%', '     0.00%']
