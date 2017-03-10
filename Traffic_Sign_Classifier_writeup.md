@@ -1,11 +1,4 @@
-#**Traffic Sign Recognition** 
-
-##Writeup Template
-
-###You can use this file as a template for your writeup if you want to submit it as a markdown file, but feel free to use some other method and submit a pdf if you prefer.
-
----
-
+#**Traffic Sign Recognition**
 **Build a Traffic Sign Recognition Project**
 
 The goals / steps of this project are the following:
@@ -34,37 +27,115 @@ The goals / steps of this project are the following:
 ---
 ###Writeup / README
 
-####1. Provide a Writeup / README that includes all the rubric points and how you addressed each one. You can submit your writeup as markdown or pdf. You can use this template as a guide for writing the report. The submission includes the project code.
+Here is a link to my [project code (Jupyter Notebook)](https://github.com/ArjaanBuijk/CarND_Traffic_Sign_Classifier_Project/blob/master/Traffic_Sign_Classifier.ipynb)
+Here is a link to my [project code (HTML exported after run)](https://github.com/ArjaanBuijk/CarND_Traffic_Sign_Classifier_Project/blob/master/Traffic_Sign_Classifier.html)
+  
+ NOTE: The github website will not display the HTML file, because it is too big. You must download it to your disk, and then open it in your browser to view it.
 
-You're reading it! and here is a link to my [project code](https://github.com/udacity/CarND-Traffic-Sign-Classifier-Project/blob/master/Traffic_Sign_Classifier.ipynb)
+###Imports
+
+####All import statements are placed at the top of the notebook.
+
+The code for this step is contained in the first code cell of the Jupyter notebook. 
+
+
+###Hyper Parameters
+
+####All hyper parameters are defined as global variables, and defined in a single code cell, to allow easy optimization studies.
+
+The code for this step is contained in the second code cell of the Jupyter notebook. 
+
+The following hyper parameters are available for optimization:
+
+| Hyper Parameter| Description | Optimized Value |
+| - | - | - |
+| EPOCHS | how many forward/backward loops | 200 |
+| BATCH_SIZE| training images per batch | 16 |
+| rate| learning rate | 0.0001 |
+| CLIP_LIMIT | clip limit during CLAHE (see below) | 0.1 |
+ 
+I ran many variations of these 4 parameters, and ended up with the optimized values given in above table.  Most surprising to me was the fact that a small value for the BATCH_SIZE gave the highest accuracy. 
+
+###Loading data
+
+####All data was downloaded, stored in a folder and loaded from disk into numpy arrays.
+
+The code for this step is contained in the third code cell of the Jupyter notebook. 
+
+The downloaded pickle files are stored in the folder: ./data
+It was already sub-divided into a training, validation and test data set.
+
+The images (X) and the labels (y) are read into these numpy arrays:
+
+ - X_train , y_train
+ - X_valid, y _valid
+ - X_test, y_test
+ 
+These are the training, validation and test sets respectively.
+  
 
 ###Data Set Summary & Exploration
 
-####1. Provide a basic summary of the data set and identify where in your code the summary was done. In the code, the analysis should be done using python, numpy and/or pandas methods rather than hardcoding results manually.
+####1. The data sets were first investigated for some basic information.
 
-The code for this step is contained in the second code cell of the IPython notebook.  
+The code for this step is contained in the fourth code cell of the Jupyter notebook.  
 
-I used the pandas library to calculate summary statistics of the traffic
-signs data set:
+The function check_and_summarize_data provides this summary:
 
-* The size of training set is ?
-* The size of test set is ?
-* The shape of a traffic sign image is ?
-* The number of unique classes/labels in the data set is ?
+| Item | Value |
+| - | - |
+|Number of training examples | 34799 | 
+|Number of validation examples | 4410 |
+|Number of testing examples | 12630 |
+|Image data shape | (32, 32, 3) |
+|Number of unique classes in training examples | 43 |
+|Number of unique classes in validation examples | 43 |
+|Number of unique classes in testing examples | 43 |
+|Number of unique classes in all | 43 |
 
-####2. Include an exploratory visualization of the dataset and identify where the code is in your code file.
+Key take-aways are:
 
-The code for this step is contained in the third code cell of the IPython notebook.  
+ - There are 43 classes
+ - There are 34799 images in the training set
+ - The images are in RGB (3 channels)
 
-Here is an exploratory visualization of the data set. It is a bar chart showing how the data ...
+ 
 
-![alt text][image1]
+####2. More in depth, visual investigation of the data.
+
+The code for this step is contained in the fifth code cell of the Jupyter notebook.  
+
+First, the description belonging to each class is read into a Panda DataFrame, from the file signnames.csv.
+
+This allows for clear descriptions in the reports.
+
+Then, in this code cell are two functions that were used during this initial investigation, and then re-used below during actual pre-processing of the data.
+
+| Function | Description |
+| - | - |
+|grayscale | converts an RGB image into grayscale | 
+|apply_clahe | Applies a Contrast Limited Adaptive Histogram Equalization (CLAHE)|
+
+The CLAHE technique was found during internet research on image processing to get more contrast in the pictures, and the method used is from the [scikit.exposure](http://scikit-image.org/docs/dev/api/skimage.exposure.html#skimage.exposure.equalize_adapthist) library.
+
+During training, it was found that applying the CLAHE technique was very beneficial to get higher accuracy.
+
+The 3rd function in this code cell creates a table that summarizes for each class:
+
+ - The class label
+ - The description of the class
+ - The number of images in the training set for this class
+ - The RGB image of the first item in the training set 
+ - The image after Grayscale
+ - The image after Grayscale and CLAHE
+ 
+![Table of Training Images](https://github.com/ArjaanBuijk/CarND_Traffic_Sign_Classifier_Project/blob/master/signs_training_summary.jpg)
 
 ###Design and Test a Model Architecture
 
 ####1. Describe how, and identify where in your code, you preprocessed the image data. What tecniques were chosen and why did you choose these techniques? Consider including images showing the output of each preprocessing technique. Pre-processing refers to techniques such as converting to grayscale, normalization, etc.
 
-The code for this step is contained in the fourth code cell of the IPython notebook.
+The code for this step is contained in the sixth, code cell of the IPython notebook.
 
 As a first step, I decided to convert the images to grayscale because ...
 
