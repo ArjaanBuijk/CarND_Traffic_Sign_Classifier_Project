@@ -295,7 +295,7 @@ I realize that I should not determine hyper-parameters based on the test set, an
 
 I did not study the effect of modifying the architecture of the network, except the addition of the dropout layer already described above. 
 
-The model was able to correctly guess 5 of the 5 traffic signs, which gives an accuracy of 100%. This compares favorably to the accuracy on the test set of 93.2%
+The model was able to correctly guess all the 5 traffic signs.
 
 ####3. Softmax probabilities for new images from web
 
