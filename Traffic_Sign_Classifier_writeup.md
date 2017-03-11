@@ -50,10 +50,12 @@ The following hyper parameters are available for optimization:
 
 | Hyper Parameter | Description | Optimized Value |
 | --------------- | ----------- | --------------- |
+| MAX_ANGLE | Max rotation angle during augmentation (see below) | 20 |
+| CLIP_LIMIT | clip limit during CLAHE (see below) | 0.1 |
 | EPOCHS | how many forward/backward loops | 200 |
 | BATCH_SIZE| training images per batch | 16 |
 | rate| learning rate | 0.0001 |
-| CLIP_LIMIT | clip limit during CLAHE (see below) | 0.1 |
+
  
 I ran many variations of these 4 parameters, and ended up with the optimized values given in above table.  Most surprising to me was the fact that a small value for the BATCH_SIZE gave the highest accuracy. 
 
@@ -201,71 +203,74 @@ The training pipeline and training session is defined in the tenth and fifteenth
 
 To train the model, I used the AdamOptimizer.
 
-I simply ran many variations of the hyper-parameters described above, in a systematic manner. Varying one parameter at a time. Each time, I looked at the validation accuracy overall, but also at this prediction summary:
-
-<u>Prediction summary:</u>
- 
-| label | count | true-pos | false-neg | false-pos |
-| ----- | ----- | -------- | --------- | --------- |
-|class =0: Speed limit (20km/h)                                 |   30   | 23(76 %)   |  7(23 %) |        1  |
-|class =1: Speed limit (30km/h)                                 |  240   |233(97 %)   |  7(2  %) |       12  |
-|class =2: Speed limit (50km/h)                                 |  240   |235(97 %)   |  5(2  %) |        5  |
-|class =3: Speed limit (60km/h)                                 |  150   |141(94 %)   |  9(6  %) |        4  |
-|class =4: Speed limit (70km/h)                                 |  210   |208(99 %)   |  2(0  %) |        6  |
-|class =5: Speed limit (80km/h)                                 |  210   |199(94 %)   | 11(5  %) |        9  |
-|class =6: End of speed limit (80km/h)                          |   60   | 59(98 %)   |  1(1  %) |        1  |
-|class =7: Speed limit (100km/h)                                |  150   |150(100%)   |  0(0  %) |        1  |
-|class =8: Speed limit (120km/h)                                |  150   |149(99 %)   |  1(0  %) |        4  |
-|class =9: No passing                                           |  150   |148(98 %)   |  2(1  %) |        0  |
-|class =10: No passing for vehicles over 3.5 metric tons        |  210   |210(100%)   |  0(0  %) |        0  |
-|class =11: Right-of-way at the next intersection               |  150   |150(100%)   |  0(0  %) |        7  |
-|class =12: Priority road                                       |  210   |210(100%)   |  0(0  %) |        3  |
-|class =13: Yield                                               |  240   |237(98 %)   |  3(1  %) |        2  |
-|class =14: Stop                                                |   90   | 83(92 %)   |  7(7  %) |        0  |
-|class =15: No vehicles                                         |   90   | 90(100%)   |  0(0  %) |        0  |
-|class =16: Vehicles over 3.5 metric tons prohibited            |   60   | 30(50 %)   | 30(50 %) |        0  |
-|class =17: No entry                                            |  120   |114(95 %)   |  6(5  %) |        0  |
-|class =18: General caution                                     |  120   |118(98 %)   |  2(1  %) |       13  |
-|class =19: Dangerous curve to the left                         |   30   | 30(100%)   |  0(0  %) |        5  |
-|class =20: Dangerous curve to the right                        |   60   | 35(58 %)   | 25(41 %) |        4  |
-|class =21: Double curve                                        |   60   | 32(53 %)   | 28(46 %) |        0  |
-|class =22: Bumpy road                                          |   60   | 59(98 %)   |  1(1  %) |        1  |
-|class =23: Slippery road                                       |   60   | 57(95 %)   |  3(5  %) |       14  |
-|class =24: Road narrows on the right                           |   30   | 23(76 %)   |  7(23 %) |        4  |
-|class =25: Road work                                           |  150   |142(94 %)   |  8(5  %) |        3  |
-|class =26: Traffic signals                                     |   60   | 54(90 %)   |  6(10 %) |        2  |
-|class =27: Pedestrians                                         |   30   | 24(80 %)   |  6(20 %) |        8  |
-|class =28: Children crossing                                   |   60   | 60(100%)   |  0(0  %) |        7  |
-|class =29: Bicycles crossing                                   |   30   | 30(100%)   |  0(0  %) |        2  |
-|class =30: Beware of ice/snow                                  |   60   | 58(96 %)   |  2(3  %) |        4  |
-|class =31: Wild animals crossing                               |   90   | 90(100%)   |  0(0  %) |       12  |
-|class =32: End of all speed and passing limits                 |   30   | 30(100%)   |  0(0  %) |       32  |
-|class =33: Turn right ahead                                    |   90   | 87(96 %)   |  3(3  %) |        3  |
-|class =34: Turn left ahead                                     |   60   | 59(98 %)   |  1(1  %) |        1  |
-|class =35: Ahead only                                          |  120   |120(100%)   |  0(0  %) |        1  |
-|class =36: Go straight or right                                |   60   | 60(100%)   |  0(0  %) |        4  |
-|class =37: Go straight or left                                 |   30   | 30(100%)   |  0(0  %) |        1  |
-|class =38: Keep right                                          |  210   |199(94 %)   | 11(5  %) |        1  |
-|class =39: Keep left                                           |   30   | 30(100%)   |  0(0  %) |       15  |
-|class =40: Roundabout mandatory                                |   60   | 58(96 %)   |  2(3  %) |        1  |
-|class =41: End of no passing                                   |   30   | 27(90 %)   |  3(10 %) |        1  |
-|class =42: End of no passing by vehicles over 3.5 metric tons  |    30  |  30(100%)  |   0(0  %)|         5 |
-|<u>TOTAL</u>                               | <u>4410</u>   |     <u>4211</u>   |      <u>199</u> |      <u>199</u>  |
-
-When using a non-augmented data set I could actually achieve a higher overall accuracy, but there were many classes with a 30+ % of false negatives. With the augmented data set, the overall accuracy was lower, but there were not many classes with such a high rate of false negatives.
-
-The only ones remaining were class 16, 20 and 21. 
+I simply ran many variations of the hyper-parameters described above, in a systematic manner. Varying one parameter at a time. Each time, I looked at the validation accuracy overall, and at a table summarizing the predictions of true positives, false negatives and false positives for each class.
 
 In addition to the tabular format, I also plotted 2 of the false negatives for each class, to get an idea why it missed the prediction. From the images plotted, it was clear that:
 
  - The predictor is good at detecting a speed limit sign, but sometimes missed the speed limit value. For example, it predicted 70 km/h instead 20 km/h.
- - Several 'danger'signs, warning for traffic signals, curve to right, curve to left, double curve, etc.. were mis-predicted.
+ - Several 'danger'signs, like slippery road, curve to right, curve to left, double curve, etc.. were wrongly predicted. 
 
 
-My final model results were:
-* training set accuracy of 1.0
-* validation set accuracy of 0.955 
-* test set accuracy of 0.932
+<u>Prediction summary with optimized hyper parameters:</u>
+ 
+ To check impact of augmenting the data, I am here showing the results of the final model without data augmentation and with data augmentation. 
+
+| accuracy measure | without data augmentation | with data augmentation |
+| ---------------- | ------------------------- | -------------------------- |
+| training accuracy | 1.0 | 1.0 |
+| validation accuracy | 0.955 |  0.972 |
+| test accuracy | 0.932 | 0.950 |
+
+The details of validation prediction, when using the final trained model using data augmentation on the training set, is given in this table:
+
+| label | count | true-pos | false-neg | false-pos |
+| ----- | ----- | -------- | --------- | --------- |
+| class =0: Speed limit (20km/h)                                  |   30  |  26(86 %)  |   4(13 %)    |     0    |
+| class =1: Speed limit (30km/h)                                  |  240  | 234(97 %)  |   6(2  %)    |     1    |
+| class =2: Speed limit (50km/h)                                  |  240  | 231(96 %)  |   9(3  %)    |     8    |
+| class =3: Speed limit (60km/h)                                  |  150  | 148(98 %)  |   2(1  %)    |     6    |
+| class =4: Speed limit (70km/h)                                  |  210  | 210(100%)  |   0(0  %)    |     4    |
+| class =5: Speed limit (80km/h)                                  |  210  | 205(97 %)  |   5(2  %)    |     5    |
+| class =6: End of speed limit (80km/h)                           |   60  |  59(98 %)  |   1(1  %)    |     0    |
+| class =7: Speed limit (100km/h)                                 |  150  | 148(98 %)  |   2(1  %)    |     0    |
+| class =8: Speed limit (120km/h)                                 |  150  | 150(100%)  |   0(0  %)    |     5    |
+| class =9: No passing                                            |  150  | 147(98 %)  |   3(2  %)    |     1    |
+| class =10: No passing for vehicles over 3.5 metric tons         |  210  | 210(100%)  |   0(0  %)    |     3    |
+| class =11: Right-of-way at the next intersection                |  150  | 149(99 %)  |   1(0  %)    |     1    |
+| class =12: Priority road                                        |  210  | 209(99 %)  |   1(0  %)    |     2    |
+| class =13: Yield                                                |  240  | 238(99 %)  |   2(0  %)    |     0    |
+| class =14: Stop                                                 |   90  |  89(98 %)  |   1(1  %)    |     1    |
+| class =15: No vehicles                                          |   90  |  89(98 %)  |   1(1  %)    |     1    |
+| class =16: Vehicles over 3.5 metric tons prohibited             |   60  |  31(51 %)  |  29(48 %)    |     0    |
+| class =17: No entry                                             |  120  | 120(100%)  |   0(0  %)    |     2    |
+| class =18: General caution                                      |  120  | 117(97 %)  |   3(2  %)    |    10    |
+| class =19: Dangerous curve to the left                          |   30  |  30(100%)  |   0(0  %)    |     3    |
+| class =20: Dangerous curve to the right                         |   60  |  51(85 %)  |   9(15 %)    |     1    |
+| class =21: Double curve                                         |   60  |  43(71 %)  |  17(28 %)    |     1    |
+| class =22: Bumpy road                                           |   60  |  60(100%)  |   0(0  %)    |     0    |
+| class =23: Slippery road                                        |   60  |  58(96 %)  |   2(3  %)    |    11    |
+| class =24: Road narrows on the right                            |   30  |  26(86 %)  |   4(13 %)    |     1    |
+| class =25: Road work                                            |  150  | 148(98 %)  |   2(1  %)    |     4    |
+| class =26: Traffic signals                                      |   60  |  54(90 %)  |   6(10 %)    |     3    |
+| class =27: Pedestrians                                          |   30  |  28(93 %)  |   2(6  %)    |     0    |
+| class =28: Children crossing                                    |   60  |  60(100%)  |   0(0  %)    |     1    |
+| class =29: Bicycles crossing                                    |   30  |  30(100%)  |   0(0  %)    |     0    |
+| class =30: Beware of ice/snow                                   |   60  |  57(95 %)  |   3(5  %)    |     2    |
+| class =31: Wild animals crossing                                |   90  |  89(98 %)  |   1(1  %)    |    13    |
+| class =32: End of all speed and passing limits                  |   30  |  30(100%)  |   0(0  %)    |     0    |
+| class =33: Turn right ahead                                     |   90  |  89(98 %)  |   1(1  %)    |     0    |
+| class =34: Turn left ahead                                      |   60  |  60(100%)  |   0(0  %)    |     1    |
+| class =35: Ahead only                                           |  120  | 120(100%)  |   0(0  %)    |     0    |
+| class =36: Go straight or right                                 |   60  |  60(100%)  |   0(0  %)    |     1    |
+| class =37: Go straight or left                                  |   30  |  30(100%)  |   0(0  %)    |     0    |
+| class =38: Keep right                                           |  210  | 205(97 %)  |   5(2  %)    |     0    |
+| class =39: Keep left                                            |   30  |  30(100%)  |   0(0  %)    |     1    |
+| class =40: Roundabout mandatory                                 |   60  |  60(100%)  |   0(0  %)    |     1    |
+| class =41: End of no passing                                    |   30  |  28(93 %)  |   2(6  %)    |    29    |
+| class =42: End of no passing by vehicles over 3.5 metric tons   |    30 |   30(100%) |    0(0  %)   |      1   |
+| <u>TOTAL</u>                                                    | <u>4410</u>  |      <u>4286</u>  |       <u>124</u>    |   <u>124</u>    |
+
+
 
  
 
@@ -302,8 +307,8 @@ For all images, the model is very sure about the prediction, as can be seen from
 
 | Image | Prediction1 | Prediction2 | Prediction3 | Prediction4 | Prediction5 | 
 | ------- | -------------- | ------------- | -------------- | -------------- | -------------- |
-|class =11: Right-of-way at the next intersection| 11(100%) |30(0%)|27(0%)|40(0%)|25(0%)|
-|class =14: Stop| 14(76.65%) |15(22.99%)|3(0.27%)|8(0.08%)|35(0.01%)|
-|class =18: General caution| 18(100%) |27(0%)|26(0%)|0(0%)|4(0%)|
-|class =25: Road work| 25(100%) |37(0%)|18(0%)|20(0%)|34(0%)|
-|class =31: Wild animals crossing| 31(100%) |21(0%)|23(0%)|19(0%)|25(0%)|
+|class =11: Right-of-way at the next intersection| 11(100%) |21(0%)|30(0%)|27(0%)|24(0%)|
+|class =14: Stop| 14(74.12%) |34(14.83%)|38(7.53%)|13(2.99%)|15(0.23%)|
+|class =18: General caution| 18(100%) |11(0%)|26(0%)|27(0%)|25(0%)|
+|class =25: Road work| 25(100%) |24(0%)|22(0%)|20(0%)|37(0%)|
+|class =31: Wild animals crossing| 31(100%) |29(0%)|19(0%)|23(0%)|21(0%)|
