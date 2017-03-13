@@ -108,6 +108,10 @@ Key take-aways are:
 
 The code for this step is contained in the fifth code cell of the Jupyter notebook.  
 
+I start by plotting a class distribution histogram, visualizing how many images for each class are in the training and test data. This again confirms that there is a large difference between number of items in each class. It does show that the ratio of test data vs training data is consistent.
+
+![class_distribution_histogram](https://github.com/ArjaanBuijk/CarND_Traffic_Sign_Classifier_Project/blob/master/class_distribution_histogram.jpg)
+ 
 The description belonging to each class is read into a Panda DataFrame, from the file signnames.csv.
 Instead of just referring to class labels, the description is always used in investigative reports.
 
