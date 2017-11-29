@@ -21,15 +21,12 @@ The goals / steps of this project are the following:
 [image7]: ./examples/placeholder.png "Traffic Sign 4"
 [image8]: ./examples/placeholder.png "Traffic Sign 5"
 
-## Rubric Points
-###Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/481/view) individually and describe how I addressed each point in my implementation.  
-
 ---
-###Writeup / README
+### Writeup / README
 
-Here is a link to my [project code (Jupyter Notebook)](https://github.com/ArjaanBuijk/CarND_Traffic_Sign_Classifier_Project/blob/master/Traffic_Sign_Classifier.ipynb)
+Link to my [project code (Jupyter Notebook)](https://github.com/ArjaanBuijk/CarND_Traffic_Sign_Classifier_Project/blob/master/Traffic_Sign_Classifier.ipynb)
 
-Here is a link to my [project code (HTML exported after run)](https://github.com/ArjaanBuijk/CarND_Traffic_Sign_Classifier_Project/blob/master/Traffic_Sign_Classifier.html)
+Link to my [project code (HTML exported after run)](https://github.com/ArjaanBuijk/CarND_Traffic_Sign_Classifier_Project/blob/master/Traffic_Sign_Classifier.html)
   
  NOTE: You can not view HTML file directly on github, because it is too big. You must download it to your disk, and then open it in your browser to view it.
 
@@ -293,7 +290,7 @@ The details of validation prediction, when using the final trained model using d
 | <u>TOTAL</u>                                                    | <u>4410</u>  |      <u>4270</u>  |       <u>140</u>    |   <u>140</u>    |
 
 
-
+xxIokPyiO$326
  
 
 ### Test a Model on New Images
