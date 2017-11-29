@@ -1,5 +1,5 @@
-#**Traffic Sign Recognition**
-**Build a Traffic Sign Recognition Project**
+# Traffic Sign Recognition using a Convolutional Neural Network
+
 
 The goals / steps of this project are the following:
 * Load the data set (see below for links to the project data set)
@@ -33,16 +33,16 @@ Here is a link to my [project code (HTML exported after run)](https://github.com
   
  NOTE: You can not view HTML file directly on github, because it is too big. You must download it to your disk, and then open it in your browser to view it.
 
-###Imports
+### Imports
 
-####All import statements are placed at the top of the notebook.
+#### All import statements are placed at the top of the notebook.
 
 The code for this step is contained in the first code cell of the Jupyter notebook. 
 
 
-###Hyper Parameters
+### Hyper Parameters
 
-####All hyper parameters are defined as global variables, and defined in a single code cell, to allow easy optimization studies.
+#### All hyper parameters are defined as global variables, and defined in a single code cell, to allow easy optimization studies.
 
 The code for this step is contained in the second code cell of the Jupyter notebook. 
 
@@ -59,9 +59,9 @@ The following hyper parameters are available for optimization:
 
  I ran many variations of these parameters, and ended up with the optimized values given in above table.  Most surprising to me was the fact that the outcome is so sensitive to the BATCH_SIZE. 
 
-###Loading data
+### Loading data
 
-####All data was downloaded, stored in a folder and loaded from disk into numpy arrays.
+#### All data was downloaded, stored in a folder and loaded from disk into numpy arrays.
 
 The code for this step is contained in the third code cell of the Jupyter notebook. 
 
@@ -77,9 +77,9 @@ The images (X) and the labels (y) are read into these numpy arrays:
 These are the training, validation and test sets respectively.
   
 
-###Data Set Summary & Exploration
+### Data Set Summary & Exploration
 
-####1. The data sets were first investigated for some basic information.
+#### 1. The data sets were first investigated for some basic information.
 
 The code for this step is contained in the fourth & fifth code cell of the Jupyter notebook.  
 
@@ -104,7 +104,7 @@ Key take-aways are:
 
  
 
-####2. More in depth, visual investigation of the data.
+#### 2. More in depth, visual investigation of the data.
 
 The code for this step is contained in the sixth and seventh code cell of the Jupyter notebook.  
 
@@ -140,9 +140,9 @@ A final review of the images is done by means of a table that summarizes for eac
  
 ![Table of Training Images](https://github.com/ArjaanBuijk/CarND_Traffic_Sign_Classifier_Project/blob/master/signs_training_summary.jpg)
 
-###Design and Test a Model Architecture
+### Design and Test a Model Architecture
 
-####1. The training data is pre-processed using augmentation, Grayscale conversion and Contrast Limited Adaptive Histogram Equalization (CLAHE)
+#### 1. The training data is pre-processed using augmentation, Grayscale conversion and Contrast Limited Adaptive Histogram Equalization (CLAHE)
 
 The code for this step is contained in the eight to eleventh code cells of the Jupyter notebook, while re-using functions defined earlier.
 
@@ -162,7 +162,7 @@ The effect of Grayscale and CLAHE was already described and shown in the previou
 
 At the end of the pre-processing steps, the data is written to a pickle file. Especially the augmentation with CLAHE is time consuming, and it is important to avoid these during hyper-parameter optimization.
 
-####2. The model architecture and utility functions.
+#### 2. The model architecture and utility functions.
 
 The code for my final model is located in the twelfth to sixteenth cells of the Jupyter notebook. 
 
@@ -206,7 +206,7 @@ In addition, there are several utility functions to monitor and evaluate the tra
 |plot_accuracies_vs_epochs|16|Plots evolution of training & validation accuracies|
  
  
-####4. Training approach.
+#### 4. Training approach.
 
 The code for loading the pre-processed data is contained in the seventeenth cell of the Jupyter notebook. 
 The training session is defined in the eigthteenth cell of the Jupyter notebook.
@@ -296,9 +296,9 @@ The details of validation prediction, when using the final trained model using d
 
  
 
-###Test a Model on New Images
+### Test a Model on New Images
 
-####1. Choose five German traffic signs found on the web and provide them in the report. For each image, discuss what quality or qualities might be difficult to classify.
+#### 1. Choose five German traffic signs found on the web and provide them in the report. For each image, discuss what quality or qualities might be difficult to classify.
 
 Here are six German traffic signs that I found on the web, shown in RGB, GrayScale and CLAHE:
 
@@ -308,7 +308,7 @@ I made sure to include a speed limit sign and some danger signs. Those are the c
 
 In general, I expect that the classifier will be able to give a good prediction on each of these. They are clear, good contrast, and not obstructed by other objects. 
   
-####2. Predictions of new images from the web.
+#### 2. Predictions of new images from the web.
 
 The code for loading the images and pre-process them is in cell 23 of the Jupyter notebook.
 The code for predicting the labels with the trained predictor is in cell 24of the Jupyter notebook.
