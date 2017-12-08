@@ -1,5 +1,8 @@
 # Traffic Sign Recognition using a Convolutional Neural Network
 
+[![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
+
+---
 
 The goals / steps of this project are the following:
 * Load the data set (see below for links to the project data set)
@@ -22,7 +25,7 @@ The goals / steps of this project are the following:
 [image8]: ./examples/placeholder.png "Traffic Sign 5"
 
 ---
-### Writeup / README
+### Files
 
 Link to my [project code (Jupyter Notebook)](https://github.com/ArjaanBuijk/CarND_Traffic_Sign_Classifier_Project/blob/master/Traffic_Sign_Classifier.ipynb)
 
