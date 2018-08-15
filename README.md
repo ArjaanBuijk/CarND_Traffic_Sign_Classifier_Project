@@ -13,7 +13,7 @@ The goals / steps of this project are the following:
 * Summarize the results with a written report
 
 
-[//]: # (Image References)
+[//]: # "Image References"
 
 [image1]: ./examples/visualization.jpg "Visualization"
 [image2]: ./examples/grayscale.jpg "Grayscaling"
@@ -30,7 +30,7 @@ The goals / steps of this project are the following:
 Link to my [project code (Jupyter Notebook)](https://github.com/ArjaanBuijk/CarND_Traffic_Sign_Classifier_Project/blob/master/Traffic_Sign_Classifier.ipynb)
 
 Link to my [project code (HTML exported after run)](https://github.com/ArjaanBuijk/CarND_Traffic_Sign_Classifier_Project/blob/master/Traffic_Sign_Classifier.html)
-  
+
  NOTE: You can not view HTML file directly on github, because it is too big. You must download it to your disk, and then open it in your browser to view it.
 
 ### Imports
@@ -73,9 +73,9 @@ The images (X) and the labels (y) are read into these numpy arrays:
  - X_train , y_train
  - X_valid, y _valid
  - X_test, y_test
- 
+
 These are the training, validation and test sets respectively.
-  
+
 
 ### Data Set Summary & Exploration
 
@@ -87,7 +87,7 @@ The function check_and_summarize_data provides this summary:
 
 | Item | Value |
 | ---- | ----- |
-|Number of training examples | 34799 | 
+|Number of training examples | 34799 |
 |Number of validation examples | 4410 |
 |Number of testing examples | 12630 |
 |Image data shape | (32, 32, 3) |
@@ -114,7 +114,7 @@ I start by plotting a class distribution histogram, visualizing how many images 
  2. the ratio of test data vs training data is consistent.
 
 ![class_distribution_histogram](https://github.com/ArjaanBuijk/CarND_Traffic_Sign_Classifier_Project/blob/master/class_distribution_histogram.jpg)
- 
+
 The description belonging to each class is read into a Panda DataFrame, from the file signnames.csv.
 Instead of just referring to class labels, the description is mostly used in investigative reports.
 
@@ -122,7 +122,7 @@ In code cell six are also two functions for image manipulation that are used dur
 
 | Function | Description |
 | -------- | ----------- |
-|grayscale | converts an RGB image into grayscale | 
+|grayscale | converts an RGB image into grayscale |
 |apply_clahe | Applies a Contrast Limited Adaptive Histogram Equalization (CLAHE)|
 
 The CLAHE technique was found during internet research on image processing to get more contrast in the pictures, and the method used is from the [scikit.exposure](http://scikit-image.org/docs/dev/api/skimage.exposure.html#skimage.exposure.equalize_adapthist) library.
@@ -137,7 +137,7 @@ A final review of the images is done by means of a table that summarizes for eac
  - The RGB image of the first item in the training set 
  - The first image after Grayscale
  - The first image after Grayscale and CLAHE
- 
+
 ![Table of Training Images](https://github.com/ArjaanBuijk/CarND_Traffic_Sign_Classifier_Project/blob/master/signs_training_summary.jpg)
 
 ### Design and Test a Model Architecture
@@ -176,16 +176,16 @@ Because the model showed a tendency to slight over fitting during training, I ad
 
 My final model consisted of the following layers:
 
-| Layer | Name | Description | 
-| ----- | ---- | ----------- | 
-| Input   |      		| 32x32x1 Grayscale image   							| 
+| Layer | Name | Description |
+| ----- | ---- | ----------- |
+| Input   |      		| 32x32x1 Grayscale image   							|
 | Convolution 5x5|conv1 | 1x1 stride, VALID padding, outputs 28x28x6 	|
 | RELU		|conv1_r|												|
 | Max pooling|conv1_p	| 2x2 stride,  VALID padding, outputs 14x14x6 |
 | Convolution 5x5|conv2	  | 1x1 stride, VALID padding, outputs 10x10x16  |
-| RELU	|conv2_r	|												|  
+| RELU	|conv2_r	|												|
 | Max pooling|conv2_p		| 2x2 stride, VALID padding, outputs 5x5x16 |
-| Flatten|fc0		| outputs 400 |    						
+| Flatten|fc0		| outputs 400 |
 | Fully connected |fc1	| outputs 120	|
 | RELU	|fc1_r	|												|
 | Fully connected |fc2	| outputs 84|
@@ -204,8 +204,8 @@ In addition, there are several utility functions to monitor and evaluate the tra
 |summarize_predictions|16|Summarizes predictions in tabular and visual formats|
 |summarize_top_probabilities|16|Summarizes top softmax probabilities |
 |plot_accuracies_vs_epochs|16|Plots evolution of training & validation accuracies|
- 
- 
+
+
 #### 4. Training approach.
 
 The code for loading the pre-processed data is contained in the seventeenth cell of the Jupyter notebook. 
@@ -234,7 +234,7 @@ The evaluation of the validation results for the final model (see table below) s
 Running the classifier on the test set gave an accuracy of <b>0.952</b>
 
 <u>Detailed prediction summary:</u>
- 
+
  To show the impact of augmenting the data, I am here listing the results of the trained classifier without data augmentation and with data augmentation. 
 
 | accuracy measure | without data augmentation | with data augmentation |
@@ -294,7 +294,7 @@ The details of validation prediction, when using the final trained model using d
 
 
 xxIokPyiO$326
- 
+
 
 ### Test a Model on New Images
 
@@ -307,7 +307,7 @@ Here are six German traffic signs that I found on the web, shown in RGB, GraySca
 I made sure to include a speed limit sign and some danger signs. Those are the classes that were the hardest to predict during testing phase.
 
 In general, I expect that the classifier will be able to give a good prediction on each of these. They are clear, good contrast, and not obstructed by other objects. 
-  
+
 #### 2. Predictions of new images from the web.
 
 The code for loading the images and pre-process them is in cell 23 of the Jupyter notebook.
@@ -348,3 +348,160 @@ For all images, the model is very sure about the prediction.
 ---
 
 ![prediction_new_class31](https://github.com/ArjaanBuijk/CarND_Traffic_Sign_Classifier_Project/blob/master/prediction_new_class31.jpg)
+
+
+
+# Installation
+
+Development and testing was done on Ubuntu 16.04 & 18.04, using Python 3.6
+
+The steps described here show how to run locally within a python virtual environment & Jupyter notebook.
+
+**Step 1. Clone the project repository**
+
+```bash
+$ git clone https://github.com/ArjaanBuijk/CarND_Traffic_Sign_Classifier_Project.git
+```
+
+**Step 2. One time: make sure python3-pip and python3-env are installed**
+
+```bash
+$ sudo apt install python3-pip
+$ sudo apt-get install python3-venv
+```
+
+**Step 3. One time: prepare the python3 virtual environment** 
+
+```bash
+$ cd CarND_Traffic_Sign_Classifier_Project
+$ python3 -m venv venv
+$ source venv/bin/activate
+(venv)
+(venv) $ pip install --upgrade pip
+(venv) $ pip install -r requirements.txt
+```
+
+Alternatively, instead of installing the required python packages using the file 'requirements.txt', which installs the specific versions that were used during development and testing, you can also enter these commands, to install the latest version of each package. Using this script has an advantage in that it also installs and configures the **Jupyter notebook**.
+
+```bash
+$ cd CarND_Traffic_Sign_Classifier_Project
+$ python3 -m venv venv
+$ source venv/bin/activate
+(venv) $ ./pip_all.sh
+
+```
+
+**Step 4. Install OpenCV**
+
+I did this step, but am not sure this is required...
+
+It is best to follow the latest instructions found [here](https://docs.opencv.org/3.4.2/d7/d9f/tutorial_linux_install.html) & [here](https://www.pyimagesearch.com/2018/05/28/ubuntu-18-04-how-to-install-opencv/) to install OpenCV and all it dependencies. As of writing of this document, these are the steps for Ubuntu 18.04:
+
+```bash
+$ sudo apt-get update
+$ sudo apt-get upgrade
+
+# Step #1: Install OpenCV dependencies on Ubuntu 18.04
+
+$ sudo apt-get install build-essential cmake unzip pkg-config
+$ sudo apt-get install libjpeg-dev libpng-dev libtiff-dev
+$ sudo apt-get install libavcodec-dev libavformat-dev libswscale-dev libv4l-dev
+$ sudo apt-get install libxvidcore-dev libx264-dev
+$ sudo apt-get install libgtk-3-dev
+$ sudo apt-get install libatlas-base-dev gfortran
+$ sudo apt-get install python3-dev
+
+# Step #2: Download the official OpenCV source
+$ cd ~
+$ wget -O opencv.zip https://github.com/opencv/opencv/archive/3.4.2.zip
+$ wget -O opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/3.4.2.zip
+$ unzip opencv.zip
+$ unzip opencv_contrib.zip
+
+# Step #3: Configure your Python 3 environment
+$ cd ~/opencv-3.4.2
+$ mkdir build
+$ cd build
+$ cmake -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/usr/local ..
+$ make -j4
+$ sudo make install
+```
+
+
+
+**Step 5. Activate the python virtual environment and start the application server**
+
+This will start the application with a clean and fresh database that contains only the default content:
+
+```bash
+$ cd FullstackND-Catalog
+$ source venv/bin/activate
+(venv) $ export FLASK_APP=catalog.py
+(venv) $ ./reset_db_migrations.sh
+(venv) $ flask run
+```
+
+You will see this output printed to the console:
+
+```bash
+ * Serving Flask app "catalog"
+ * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+```
+
+
+
+For end-2-end testing, a Jupyter notebook with the python 3 kernel is used. 
+This must be installed and configured with:
+
+```bash
+(venv) $ pip install --upgrade pip
+(venv) $ pip install jupyter
+(venv) $ pip install ipykernel
+(venv) $ python3 -m ipykernel install --user
+```
+
+For validating python syntax and style 3 tools are used, namely **pycodestyle ** and  **pylint**. These can be installed with:
+
+```bash
+(venv) $ pip install --upgrade pip
+(venv) $ pip install pylint
+(venv) $ pip install pycodestyle
+```
+
+
+
+
+
+# IDE Integration of Pylint and pycodestyle
+
+Since I use Wing IDE 6, I will explain how to setup so called *tool panels*, which makes finding & fixing issues a lot more comfortable.
+
+##### <u>Integration of Pylint into Wing IDE 6</u>
+
+PyLint is already available as a toolpanel, and setup and activation is described in the [help](http://www.wingware.com/doc/edit/pylint). To avoid some error from cluttering up the result a .pylintrc file was created in the root folder of our project. The content of this pylintrc file is described above. It is important that you save your wing project file (.wpr) in the same folder as the .pylintrc file, so that the .pylintrc configuration will be automatically used when running PyLint from within the IDE.
+
+##### <u>Integration of pycodestyle into Wing IDE 6</u>
+
+pycodestyle is not out-of-the box available as a toolpanel, but it is easily installed by using a script written by [Stefan Tjarks](https://bitbucket.org/stj/), as follows:
+
+- Download pep8panel.py from [here](https://bitbucket.org/stj/pep8panel/wiki/Home)
+
+- Store it in the folder ~/.wingide6/scripts
+
+- Modify these lines in file ~/.wingide6/scripts/pep8panel.py
+
+  ```python
+  .
+  PEP8_COMMAND = '<your_path>/FullstackND-Catalog/venv/bin/pycodestyle'
+  .
+  .
+  # See: https://bitbucket.org/stj/pep8panel/issues/3/fix-pep8panel-for-wingide-6
+  # from wingutils import location
+  from wingbase import location
+  ```
+
+- In Wing IDE 6, select: Edit --> Reload all scripts
+
+- Restart Wing IDE and insert tool panel called pep8
+
+  ​
